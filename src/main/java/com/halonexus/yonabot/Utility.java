@@ -27,4 +27,11 @@ public class Utility {
         Pattern splitPattern = Pattern.compile(pattern);
         return splitPattern.split(arguments, parts);
     }
+
+    public static String capitalise(String in){
+        if(in.isBlank() || in.isEmpty()){
+            return in;
+        }
+        return in.substring(0, 1).toUpperCase() + in.substring(1).toLowerCase();
+    }
 }

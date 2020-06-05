@@ -1,13 +1,16 @@
 package com.halonexus.yonabot.base;
 
 public enum Category {
-    ACTION("Action"),
-    MISC("Misc");
+    ACTION("Action",0),
+    MISC("Misc",1),
+    INFO("Info",2);
 
     private final String name;
+    private final int priority;
 
-    Category(String name){
+    Category(String name, int priority){
         this.name = name;
+        this.priority = priority;
     }
 
     public Category getCategoryFromString(String categoryName){
@@ -18,5 +21,6 @@ public enum Category {
         }
         return null;
     }
-
+    public String getName(){return name;}
+    public int getPriority(){return priority;}
 }

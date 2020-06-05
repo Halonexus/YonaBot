@@ -13,7 +13,7 @@ public class CommandProcessor {
         }
         msg = msg.substring(prefix.length());
         String[] parts = Utility.splitArguments(msg, 2);
-        String name = parts[0];
+        String name = parts[0].toLowerCase();
         String content;
         if(parts.length == 1){
             content = "";
