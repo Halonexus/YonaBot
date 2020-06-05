@@ -1,6 +1,5 @@
 package com.halonexus.yonabot;
 
-import com.halonexus.yonabot.base.Context;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 public class CommandProcessor {
@@ -8,12 +7,20 @@ public class CommandProcessor {
 
     public boolean process(GuildMessageReceivedEvent message){
         String msg = message.getMessage().getContentRaw();
-        if(!msg.startsWith(DataManager.getConfig().prefix)){
+        String prefix = DataManager.getConfig().prefix;
+        if(!msg.toLowerCase().startsWith(prefix)){
             return false;
         }
-        if(msg.startsWith("y?ping")){
-            COMMAND_REGISTRY.commands.get("ping").execute(new Context(message, msg),msg);
+        msg = msg.substring(prefix.length());
+        String[] parts = Utility.splitArguments(msg, 2);
+        String name = parts[0];
+        String content;
+        if(parts.length == 1){
+            content = "";
+        }else{
+            content = parts[1];
         }
+        COMMAND_REGISTRY.run(message, name, content);
         return true;
     }
 
