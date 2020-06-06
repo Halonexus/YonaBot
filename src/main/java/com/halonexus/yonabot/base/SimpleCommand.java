@@ -3,17 +3,17 @@ package com.halonexus.yonabot.base;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SimpleCommand implements Command{
+public abstract class SimpleCommand implements Command {
     private final Category category;
     private final PermissionLevel permissionLevel;
     private final List<String> aliases = new ArrayList<>();
 
-    public SimpleCommand(Category category){
+    public SimpleCommand(Category category) {
         this.category = category;
         this.permissionLevel = PermissionLevel.USER;
     }
 
-    public SimpleCommand(Category category, PermissionLevel permissionLevel){
+    public SimpleCommand(Category category, PermissionLevel permissionLevel) {
         this.category = category;
         this.permissionLevel = permissionLevel;
     }
@@ -39,7 +39,7 @@ public abstract class SimpleCommand implements Command{
         return aliases;
     }
 
-    public void addAlias(String alias){
+    public void addAlias(String alias) {
         aliases.add(alias);
     }
 }

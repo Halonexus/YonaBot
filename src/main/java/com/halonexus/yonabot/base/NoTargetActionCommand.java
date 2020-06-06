@@ -8,15 +8,15 @@ import java.io.File;
 import java.util.List;
 import java.util.Random;
 
-public abstract class ActionCommand implements Command {
+public abstract class NoTargetActionCommand implements Command {
     private final String assetPath;
-    private final String actionPastTense;
+    private final String actionString;
     private final Category category;
     private final PermissionLevel permissionLevel;
 
-    public ActionCommand(String assetPath, String actionPastTense){
+    public NoTargetActionCommand(String assetPath, String actionString) {
         this.assetPath = assetPath;
-        this.actionPastTense = actionPastTense;
+        this.actionString = actionString;
         permissionLevel = PermissionLevel.USER;
         category = Category.ACTION;
     }
@@ -28,19 +28,9 @@ public abstract class ActionCommand implements Command {
         File[] files = dir.listFiles();
         Random rand = new Random();
         File file = files[rand.nextInt(files.length)];
-        String targets = "";
-        for(Member u : context.getMentionedMembers()){
-            if(!targets.isBlank()){
-                targets = targets.concat(", ");
-            }
-            targets = targets.concat(u.getEffectiveName());
-        }
-        if(targets.isBlank()){
-            return;
-        }
         embedBuilder
-                .setDescription("**" + context.getMember().getEffectiveName() + "** " + actionPastTense + " **" + targets + "**")
-                .setColor(new Color(255,0,255))
+                .setDescription("**" + context.getMember().getEffectiveName() + "** " + actionString)
+                .setColor(new Color(255, 0, 255))
                 .setImage("attachment://" + file.getName());
         context.getChannel().sendFile(file).embed(embedBuilder.build()).queue();
     }

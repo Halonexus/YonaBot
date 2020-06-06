@@ -6,7 +6,7 @@ public class GuildSettings {
     public CommandSettings[] commandSettings;
 
     //should change types from String
-    private static class CommandSettings{
+    private static class CommandSettings {
         String commandName;
         String[] disabledChannels;
         String[] disabledRoles;
