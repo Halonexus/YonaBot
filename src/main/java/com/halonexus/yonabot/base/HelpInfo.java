@@ -11,15 +11,15 @@ public class HelpInfo {
     @Getter
     private final String usage;
     @Getter
-    private final Map<String,String> arguments = new HashMap<>();
+    private final Map<String, String> arguments = new HashMap<>();
 
-    public HelpInfo(String description, String usage){
+    public HelpInfo(String description, String usage) {
         this.description = description;
         this.usage = usage;
     }
 
-    public HelpInfo addArgument(String argument, String argumentInfo){
-        arguments.put(argument,argumentInfo);
+    public HelpInfo addArgument(String argument, String argumentInfo) {
+        arguments.put(argument, argumentInfo);
         return this;
     }
 }

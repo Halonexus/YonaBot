@@ -16,9 +16,9 @@ public class CommandRegistry {
         commands.put(commandName, command);
     }
 
-    public boolean run(GuildMessageReceivedEvent message, String commandName, String content){
+    public boolean run(GuildMessageReceivedEvent message, String commandName, String content) {
         Command command = commands.get(commandName);
-        if(command == null){
+        if (command == null) {
             return false;
         }
         command.execute(new Context(message, content), content);

@@ -21,7 +21,7 @@ public class Context {
     @Getter
     private final String content;
 
-    public Context(GuildMessageReceivedEvent event, String content){
+    public Context(GuildMessageReceivedEvent event, String content) {
         this.event = event;
         this.content = content;
     }

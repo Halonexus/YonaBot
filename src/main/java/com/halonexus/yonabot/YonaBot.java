@@ -23,9 +23,10 @@ public class YonaBot {
     @Getter
     private static YonaBot instance;
     private final Config config;
+    @Getter
     private final JDA jda;
 
-    private YonaBot(){
+    private YonaBot() {
         config = DataManager.readConfig("config.json");
         instance = this;
         registerCommands();
@@ -44,26 +45,23 @@ public class YonaBot {
                     .setActivity(Activity.watching("you sleep"))
                     .build()
                     .awaitReady();
-        }
-        catch(LoginException e){
+        } catch (LoginException e) {
             System.exit(2);
-        }
-        catch(InterruptedException e){
+        } catch (InterruptedException e) {
             System.exit(3);
         }
         return jda;
     }
 
-    public static void main(String[] args){
-        try{
+    public static void main(String[] args) {
+        try {
             new YonaBot();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
 
         }
     }
 
-    private void registerCommands(){
+    private void registerCommands() {
         Set<Class<?>> commands = lookForAnnotatedOn(CommandModule.class);
         EventBus eventBus = new EventBus();
         for (Class<?> aClass : commands) {
