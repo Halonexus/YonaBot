@@ -11,27 +11,40 @@ import java.util.Random;
 public abstract class TargetActionCommand implements Command {
     private final String assetPath;
     private final String[] actionsPastTense;
-    private final String[] selfActions;
-    private final String[] botActions;
+    private final String[] selfStart;
+    private final String[] selfFinish;
+    private final String[] botStart;
+    private final String[] botFinish;
+    private final String[] finisher;
     private final Category category;
     private final PermissionLevel permissionLevel;
+    private static final String[] embarrassEmotes = new String[]{"<:svLove:709701962517577778>","<:tmpblush:668054723932192789>","<:Shoeby_Blush2:702099192482365460>","<:meguYes:700388489174188102>","<:blush_what:691462538440867857>","<:m4Blush:668036075499028490>"};
 
     public TargetActionCommand(String assetPath, String[] actionsPastTense) {
         this.assetPath = assetPath;
         permissionLevel = PermissionLevel.USER;
         category = Category.ACTION;
         this.actionsPastTense = actionsPastTense;
-        this.selfActions = actionsPastTense;
-        this.botActions = actionsPastTense;
+        selfFinish = null;
+        botFinish = null;
+        selfStart = null;
+        botStart = null;
+        finisher = null;
     }
 
-    public TargetActionCommand(String assetPath, String[] actionsPastTense, String[] selfActions, String[] botActions) {
+    public TargetActionCommand(String assetPath,
+                               String[] actionsPastTense, String[] finisher,
+                               String[] selfStart, String[] selfFinish,
+                               String[] botStart, String[] botFinish) {
         this.assetPath = assetPath;
         permissionLevel = PermissionLevel.USER;
         category = Category.ACTION;
         this.actionsPastTense = actionsPastTense;
-        this.selfActions = selfActions;
-        this.botActions = botActions;
+        this.selfFinish = selfFinish;
+        this.botFinish = botFinish;
+        this.botStart = botStart;
+        this.selfStart = selfStart;
+        this.finisher = finisher;
     }
 
     @Override
@@ -41,7 +54,7 @@ public abstract class TargetActionCommand implements Command {
         boolean selfTarget = false;
         boolean botTarget = false;
         for (Member u : context.getMentionedMembers()) {
-            if(u.equals(context.getSelfMember())){
+            if (u.equals(context.getSelfMember())) {
                 botTarget = true;
             }
             if (u.equals(context.getMember())) {
@@ -57,44 +70,65 @@ public abstract class TargetActionCommand implements Command {
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setColor(new Color(255, 0, 255))
                 .setImage("attachment://" + file.getName());
+        //self branch
         if (targets.isBlank() && selfTarget) {
             embedBuilder
-                    .setDescription("You're so lonely...\nHere...**"
-                            + context.getSelfMember().getEffectiveName() + "** "
-                            + getRandomString(selfActions) + " **"
-                            + context.getMember().getEffectiveName() + "**");
+                    .setDescription(getRandomString(selfStart)
+                            + " **" + context.getSelfMember().getEffectiveName() + "** "
+                            + getRandomString(actionsPastTense)
+                            + " **" + context.getMember().getEffectiveName() + "** "
+                            + getRandomString(selfFinish));
             context.getChannel().sendFile(file).embed(embedBuilder.build()).queue();
+            if(passedThreshold(0.5)){
+                context.send(getRandomString(embarrassEmotes));
+            }
             return;
         }
-        if(botTarget){
+        //bot branch
+        if (botTarget) {
             embedBuilder
-                    .setDescription("**" + context.getMember().getEffectiveName()
-                            + "** " + getRandomString(botActions) + " **" + targets + "**");
+                    .setDescription(getRandomString(botStart)
+                            + " **" + context.getMember().getEffectiveName() + "** "
+                            + getRandomString(actionsPastTense)
+                            + " **" + targets + "** "
+                            + getRandomString(botFinish));
             context.getChannel().sendFile(file).embed(embedBuilder.build()).queue();
+            if(passedThreshold(0.4)){
+                context.send(getRandomString(embarrassEmotes));
+            }
             return;
         }
+        //no target
         if (targets.isBlank()) {
             return;
         }
+        //normal
         embedBuilder
-                .setDescription("**" + context.getMember().getEffectiveName()
-                        + "** " + getRandomString(actionsPastTense) + " **" + targets + "**");
+                .setDescription(" **" + context.getMember().getEffectiveName() + "** "
+                        + getRandomString(actionsPastTense)
+                        + " **" + targets + "** "
+                        + getRandomString(finisher));
         context.getChannel().sendFile(file).embed(embedBuilder.build()).queue();
     }
 
-    private static File getRandomFile(String path){
+    private static File getRandomFile(String path) {
         File dir = new File(path);
         File[] files = dir.listFiles();
         Random rand = new Random();
         return files[rand.nextInt(files.length)];
     }
 
-    private static String getRandomString(String[] strings){
-        if(strings == null){
+    private static String getRandomString(String[] strings) {
+        if (strings == null) {
             return "";
         }
         Random rand = new Random();
         return strings[rand.nextInt(strings.length)];
+    }
+
+    private static boolean passedThreshold(double threshold){
+        Random rand = new Random();
+        return rand.nextDouble() > threshold;
     }
 
     @Override
