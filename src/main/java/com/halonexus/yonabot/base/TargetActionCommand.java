@@ -18,7 +18,7 @@ public abstract class TargetActionCommand implements Command {
     private final String[] finisher;
     private final Category category;
     private final PermissionLevel permissionLevel;
-    private static final String[] embarrassEmotes = new String[]{"<:svLove:709701962517577778>","<:tmpblush:668054723932192789>","<:Shoeby_Blush2:702099192482365460>","<:meguYes:700388489174188102>","<:blush_what:691462538440867857>","<:m4Blush:668036075499028490>"};
+    private static final String[] embarrassEmotes = new String[]{"<:svLove:709701962517577778>", "<:tmpblush:668054723932192789>", "<:Shoeby_Blush2:702099192482365460>", "<:meguYes:700388489174188102>", "<:blush_what:691462538440867857>", "<:m4Blush:668036075499028490>"};
 
     public TargetActionCommand(String assetPath, String[] actionsPastTense) {
         this.assetPath = assetPath;
@@ -79,7 +79,7 @@ public abstract class TargetActionCommand implements Command {
                             + " **" + context.getMember().getEffectiveName() + "** "
                             + getRandomString(selfFinish));
             context.getChannel().sendFile(file).embed(embedBuilder.build()).queue();
-            if(passedThreshold(0.5)){
+            if (passedThreshold(0.5)) {
                 context.send(getRandomString(embarrassEmotes));
             }
             return;
@@ -93,7 +93,7 @@ public abstract class TargetActionCommand implements Command {
                             + " **" + targets + "** "
                             + getRandomString(botFinish));
             context.getChannel().sendFile(file).embed(embedBuilder.build()).queue();
-            if(passedThreshold(0.4)){
+            if (passedThreshold(0.4)) {
                 context.send(getRandomString(embarrassEmotes));
             }
             return;
@@ -126,7 +126,7 @@ public abstract class TargetActionCommand implements Command {
         return strings[rand.nextInt(strings.length)];
     }
 
-    private static boolean passedThreshold(double threshold){
+    private static boolean passedThreshold(double threshold) {
         Random rand = new Random();
         return rand.nextDouble() > threshold;
     }
