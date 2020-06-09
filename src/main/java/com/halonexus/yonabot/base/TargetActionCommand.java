@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.entities.Member;
 
 import java.awt.*;
 import java.io.File;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Random;
 
@@ -73,11 +75,11 @@ public abstract class TargetActionCommand implements Command {
         //self branch
         if (targets.isBlank() && selfTarget) {
             embedBuilder
-                    .setDescription(getRandomString(selfStart)
+                    .setDescription(encodeInUTF8(getRandomString(selfStart)
                             + " **" + context.getSelfMember().getEffectiveName() + "** "
                             + getRandomString(actionsPastTense)
                             + " **" + context.getMember().getEffectiveName() + "** "
-                            + getRandomString(selfFinish));
+                            + getRandomString(selfFinish)));
             context.getChannel().sendFile(file).embed(embedBuilder.build()).queue();
             if (passedThreshold(0.5)) {
                 context.send(getRandomString(embarrassEmotes));
@@ -87,11 +89,11 @@ public abstract class TargetActionCommand implements Command {
         //bot branch
         if (botTarget) {
             embedBuilder
-                    .setDescription(getRandomString(botStart)
+                    .setDescription(encodeInUTF8(getRandomString(botStart)
                             + " **" + context.getMember().getEffectiveName() + "** "
                             + getRandomString(actionsPastTense)
                             + " **" + targets + "** "
-                            + getRandomString(botFinish));
+                            + getRandomString(botFinish)));
             context.getChannel().sendFile(file).embed(embedBuilder.build()).queue();
             if (passedThreshold(0.4)) {
                 context.send(getRandomString(embarrassEmotes));
@@ -104,10 +106,10 @@ public abstract class TargetActionCommand implements Command {
         }
         //normal
         embedBuilder
-                .setDescription(" **" + context.getMember().getEffectiveName() + "** "
+                .setDescription(encodeInUTF8(" **" + context.getMember().getEffectiveName() + "** "
                         + getRandomString(actionsPastTense)
                         + " **" + targets + "** "
-                        + getRandomString(finisher));
+                        + getRandomString(finisher)));
         context.getChannel().sendFile(file).embed(embedBuilder.build()).queue();
     }
 
@@ -116,6 +118,11 @@ public abstract class TargetActionCommand implements Command {
         File[] files = dir.listFiles();
         Random rand = new Random();
         return files[rand.nextInt(files.length)];
+    }
+
+    private static String encodeInUTF8(String string) {
+        byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     private static String getRandomString(String[] strings) {
