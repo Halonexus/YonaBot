@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.entities.Member;
 
 import java.awt.*;
 import java.io.File;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Random;
 
@@ -18,7 +20,7 @@ public abstract class TargetActionCommand implements Command {
     private final String[] finisher;
     private final Category category;
     private final PermissionLevel permissionLevel;
-    private static final String[] embarrassEmotes = new String[]{"<:svLove:709701962517577778>","<:tmpblush:668054723932192789>","<:Shoeby_Blush2:702099192482365460>","<:meguYes:700388489174188102>","<:blush_what:691462538440867857>","<:m4Blush:668036075499028490>"};
+    private static final String[] embarrassEmotes = new String[]{"<:svLove:709701962517577778>", "<:tmpblush:668054723932192789>", "<:Shoeby_Blush2:702099192482365460>", "<:meguYes:700388489174188102>", "<:blush_what:691462538440867857>", "<:m4Blush:668036075499028490>"};
 
     public TargetActionCommand(String assetPath, String[] actionsPastTense) {
         this.assetPath = assetPath;
@@ -73,13 +75,13 @@ public abstract class TargetActionCommand implements Command {
         //self branch
         if (targets.isBlank() && selfTarget) {
             embedBuilder
-                    .setDescription(getRandomString(selfStart)
+                    .setDescription(encodeInUTF8(getRandomString(selfStart)
                             + " **" + context.getSelfMember().getEffectiveName() + "** "
                             + getRandomString(actionsPastTense)
                             + " **" + context.getMember().getEffectiveName() + "** "
-                            + getRandomString(selfFinish));
+                            + getRandomString(selfFinish)));
             context.getChannel().sendFile(file).embed(embedBuilder.build()).queue();
-            if(passedThreshold(0.5)){
+            if (passedThreshold(0.5)) {
                 context.send(getRandomString(embarrassEmotes));
             }
             return;
@@ -87,13 +89,13 @@ public abstract class TargetActionCommand implements Command {
         //bot branch
         if (botTarget) {
             embedBuilder
-                    .setDescription(getRandomString(botStart)
+                    .setDescription(encodeInUTF8(getRandomString(botStart)
                             + " **" + context.getMember().getEffectiveName() + "** "
                             + getRandomString(actionsPastTense)
                             + " **" + targets + "** "
-                            + getRandomString(botFinish));
+                            + getRandomString(botFinish)));
             context.getChannel().sendFile(file).embed(embedBuilder.build()).queue();
-            if(passedThreshold(0.4)){
+            if (passedThreshold(0.4)) {
                 context.send(getRandomString(embarrassEmotes));
             }
             return;
@@ -104,10 +106,10 @@ public abstract class TargetActionCommand implements Command {
         }
         //normal
         embedBuilder
-                .setDescription(" **" + context.getMember().getEffectiveName() + "** "
+                .setDescription(encodeInUTF8(" **" + context.getMember().getEffectiveName() + "** "
                         + getRandomString(actionsPastTense)
                         + " **" + targets + "** "
-                        + getRandomString(finisher));
+                        + getRandomString(finisher)));
         context.getChannel().sendFile(file).embed(embedBuilder.build()).queue();
     }
 
@@ -118,6 +120,11 @@ public abstract class TargetActionCommand implements Command {
         return files[rand.nextInt(files.length)];
     }
 
+    private static String encodeInUTF8(String string) {
+        byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
+
     private static String getRandomString(String[] strings) {
         if (strings == null) {
             return "";
@@ -126,7 +133,7 @@ public abstract class TargetActionCommand implements Command {
         return strings[rand.nextInt(strings.length)];
     }
 
-    private static boolean passedThreshold(double threshold){
+    private static boolean passedThreshold(double threshold) {
         Random rand = new Random();
         return rand.nextDouble() > threshold;
     }

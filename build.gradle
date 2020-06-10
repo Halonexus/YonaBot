@@ -1,5 +1,11 @@
 plugins {
     id 'java'
+    id 'application'
+}
+
+application {
+    mainClassName = 'com.halonexus.yonabot.YonaBot'
+    applicationDefaultJvmArgs = ['-Dconsole.encoding=UTF-8', '-Dfile.encoding=UTF-8']
 }
 
 repositories {
